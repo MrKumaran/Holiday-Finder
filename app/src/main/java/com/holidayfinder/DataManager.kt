@@ -19,6 +19,12 @@ import kotlinx.coroutines.launch
 //"created_at": "2025-01-02 08:28:52",
 //"updated_at": null
 
+/* Year limit */
+// 2023 to 2040
+
+/* Country */
+// Using country Code 2 letter
+
 data class Holiday(val holidayID:String, val name:String, val date:String,
                    val description:String, val occasionID:String, val country:String,
                    val type:String, val createdAt:String, val updatedAt:String)
