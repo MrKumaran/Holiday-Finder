@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.ViewModelProvider
+import com.holidayfinder.data.DataManager
 import com.holidayfinder.ui.theme.HolidayFinderTheme
 
 class MainActivity : ComponentActivity() {
