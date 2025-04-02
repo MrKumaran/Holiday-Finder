@@ -3,6 +3,7 @@ package com.holidayfinder.pages
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,7 +21,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -76,15 +76,14 @@ private fun HolidayType(holidayType:String, count:Int) {
                  .padding(
                      top = 8.dp,
                      bottom = 8.dp,
-                 )
-                 .shadow(8.dp, shape = RoundedCornerShape(50)),
+                 ),
              colors = cardColors(Color.White),
              border = BorderStroke(.2.dp, Color.Gray),
              shape = RoundedCornerShape(50),
              elevation = cardElevation(
-                 defaultElevation = 4.dp,
-                 focusedElevation = 4.dp,
-                 pressedElevation = 4.dp,
+                 defaultElevation = 2.dp,
+                 focusedElevation = 0.dp,
+                 pressedElevation = 0.dp,
                  disabledElevation = 0.dp
              )
          ) {
@@ -117,7 +116,7 @@ private fun HolidayCards(eventName: String, eventType: String, eventDate: String
             color = Color.White,
             shape = RoundedCornerShape(40)
         )
-        .padding(horizontal = 12.dp, vertical = 8.dp)
+        .padding(horizontal = 12.dp, vertical = 12.dp)
     Card(
         modifier = Modifier
             .padding(
@@ -128,7 +127,7 @@ private fun HolidayCards(eventName: String, eventType: String, eventDate: String
         colors = cardColors(Color.Cyan),
         shape = RoundedCornerShape(20),
         elevation = cardElevation(
-            defaultElevation = 0.dp,
+            defaultElevation = 2.dp,
             focusedElevation = 0.dp,
             pressedElevation = 0.dp,
             disabledElevation = 0.dp
@@ -161,7 +160,8 @@ private fun HolidayCards(eventName: String, eventType: String, eventDate: String
             )
             Row(
                 modifier = Modifier
-                    .padding(top = 12.dp)
+                    .padding(top = 12.dp),
+                horizontalArrangement = Arrangement.Absolute.SpaceEvenly
             ) {
                 Text(
                     text = "Date: $eventDate",
