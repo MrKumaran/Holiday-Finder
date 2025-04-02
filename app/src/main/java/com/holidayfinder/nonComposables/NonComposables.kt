@@ -18,8 +18,12 @@ fun holidayTypeMap(dataManager: DataManager): HashMap<String,Int> {
     return holidayType
 }
 
-fun getDay(date:String):String{
-        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-        val date = LocalDate.parse(date, formatter)
+fun getDay(dateStr:String):String{
+        val date = LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         return date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
+}
+
+fun formatDate(dateStr:String):String{
+    val date = LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+    return date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
 }
