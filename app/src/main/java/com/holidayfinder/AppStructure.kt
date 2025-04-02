@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.holidayfinder.Pages.HolidayPage
+import com.holidayfinder.pages.HolidayPage
 
 @Composable
 fun AppStructure(dataManager:DataManager) {

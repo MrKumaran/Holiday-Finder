@@ -19,11 +19,11 @@ import kotlinx.coroutines.launch
 //"created_at": "2025-01-02 08:28:52",
 //"updated_at": null
 
-data class Holiday(val holiday_id:String, val name:String, val date:String,
-                   val description:String, val occasion_id:String, val country:String,
-                   val type:String, val created_at:String, val updated_at:String)
+data class Holiday(val holidayID:String, val name:String, val date:String,
+                   val description:String, val occasionID:String, val country:String,
+                   val type:String, val createdAt:String, val updatedAt:String)
 
-class DataManager(ThisApp: Application): AndroidViewModel(ThisApp) {
+class DataManager(thisApp: Application): AndroidViewModel(thisApp) {
     var holidayList: List<Holiday> by mutableStateOf(listOf())
     init {
         fetchData()
