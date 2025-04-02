@@ -1,4 +1,4 @@
-package com.holidayfinder.Pages
+package com.holidayfinder.pages
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -23,10 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.holidayfinder.DataManager
+import com.holidayfinder.nonComposables.holidayTypeMap
 
 
 @Composable
@@ -36,38 +36,34 @@ fun HolidayPage(dataManager: DataManager, modifier: Modifier = Modifier) {
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        var holidayType: MutableSet<String> = mutableSetOf()
-        for (Holiday in dataManager.holidayList) {
-            holidayType.add(Holiday.type)
-        }
         item {
-            Text(text = holidayType.toString())
+            HolidayBar(dataManager)
         }
-        items(dataManager.holidayList) { Holiday ->
+        items(dataManager.holidayList) { holiday ->
             HolidayCards(
-                eventName = Holiday.name,
-                eventType = Holiday.type,
-                eventDate = Holiday.date,
-                eventDay = Holiday.description
+                eventName = holiday.name,
+                eventType = holiday.type,
+                eventDate = holiday.date,
+                eventDay = holiday.description
             )
         }
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-private fun HolidayBar_Preview() {
+private fun HolidayBar(dataManager: DataManager) {
     Row(
         modifier = Modifier.horizontalScroll(rememberScrollState())
     ) {
-        for (i in 1..10) {
-            HolidayTypeBar(holidayType = "Testing", count = i)
+        val holidayType = holidayTypeMap(dataManager)
+        for (i in holidayType) {
+            HolidayType(holidayType = i.key, count = i.value)
         }
-}
+    }
 }
 
 @Composable
-fun HolidayTypeBar(holidayType:String, count:Int) {
+private fun HolidayType(holidayType:String, count:Int) {
          Card(
              modifier = Modifier
                  .padding(
@@ -86,7 +82,7 @@ fun HolidayTypeBar(holidayType:String, count:Int) {
          ) {
              Row(
                  modifier = Modifier
-                     .padding(16.dp)
+                     .padding(8.dp)
              ) {
                  Text(
                      text = "$holidayType:",
@@ -105,7 +101,6 @@ fun HolidayTypeBar(holidayType:String, count:Int) {
              }
          }
 }
-
 
 @Composable
 private fun HolidayCards(eventName: String, eventType: String, eventDate: String, eventDay: String) {
