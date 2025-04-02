@@ -21,13 +21,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.holidayfinder.DataManager
+import com.holidayfinder.R
+import com.holidayfinder.nonComposables.formatDate
+import com.holidayfinder.nonComposables.getDay
 import com.holidayfinder.nonComposables.holidayTypeMap
+import com.holidayfinder.ui.theme.littleWhite
 
 
 @Composable
@@ -44,8 +51,8 @@ fun HolidayPage(dataManager: DataManager, modifier: Modifier = Modifier) {
             HolidayCards(
                 eventName = holiday.name,
                 eventType = holiday.type,
-                eventDate = holiday.date,
-                eventDay = holiday.description
+                eventDate = formatDate(holiday.date),
+                eventDay = getDay(holiday.date)
             )
         }
     }
@@ -111,72 +118,109 @@ private fun HolidayType(holidayType:String, count:Int) {
 
 @Composable
 private fun HolidayCards(eventName: String, eventType: String, eventDate: String, eventDay: String) {
-    val textModifier: Modifier = Modifier
-        .background(
-            color = Color.White,
-            shape = RoundedCornerShape(40)
-        )
-        .padding(horizontal = 12.dp, vertical = 12.dp)
     Card(
         modifier = Modifier
             .padding(
-                horizontal = 20.dp,
+                horizontal = 12.dp,
                 vertical = 8.dp
             )
             .width(360.dp),
         colors = cardColors(Color.Cyan),
         shape = RoundedCornerShape(20),
         elevation = cardElevation(
-            defaultElevation = 2.dp,
-            focusedElevation = 0.dp,
-            pressedElevation = 0.dp,
-            disabledElevation = 0.dp
+            defaultElevation = 4.dp
         )
     ) {
         Column(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(vertical = 20.dp, horizontal = 20.dp)
         ) {
             Text(
                 text = eventName,
                 fontFamily = FontFamily.SansSerif,
                 fontWeight = FontWeight.ExtraBold,
-                modifier = textModifier
+                fontSize = 20.sp,
+                modifier = Modifier
+                    .shadow(
+                        elevation = 1.dp,
+                        shape = RoundedCornerShape(20),
+                        clip = true,
+                        spotColor = Color.Black
+                    )
+                    .background(
+                        color = littleWhite,
+                        shape = RoundedCornerShape(20)
+                    )
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
             )
             Spacer(
                 modifier = Modifier
-                    .padding(vertical = .5.dp)
+                    .padding(vertical = 2.dp)
             )
             Text(
                 text = eventType,
+                fontStyle = FontStyle.Italic,
                 fontFamily = FontFamily.SansSerif,
                 fontSize = 12.sp,
                 modifier = Modifier
-                    .background(
-                        color = Color.White,
-                        shape = RoundedCornerShape(40)
-                    )
                     .padding(horizontal = 12.dp, vertical = 2.dp)
             )
             Row(
                 modifier = Modifier
                     .padding(top = 12.dp),
-                horizontalArrangement = Arrangement.Absolute.SpaceEvenly
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "Date: $eventDate",
-                    fontFamily = FontFamily.SansSerif,
-                    modifier = textModifier
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Date:",
+                        fontFamily = FontFamily.SansSerif,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier
+                            .padding(start = 8.dp, top = 12.dp, bottom = 12.dp)
+                    )
+
+                    Spacer(
+                        modifier = Modifier
+                            .padding(horizontal = 2.dp)
+                    )
+
+                    Text(
+                        text = eventDate,
+                        fontFamily = FontFamily.SansSerif,
+                        fontWeight = FontWeight.ExtraBold,
+                        modifier = Modifier
+                            .padding(top = 12.dp, end = 4.dp, bottom = 12.dp)
+                    )
+                }
                 Spacer(
                     modifier = Modifier
-                        .padding(horizontal = 8.dp)
+                        .padding(horizontal = 16.dp)
                 )
-                Text(
-                    text = "Day: $eventDay",
-                    fontFamily = FontFamily.SansSerif,
-                    modifier = textModifier
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Day:",
+                        fontFamily = FontFamily.SansSerif,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier
+                            .padding(start = 4.dp, top = 12.dp, bottom = 12.dp)
+                    )
+
+                    Spacer(
+                        modifier = Modifier.padding(horizontal = 2.dp)
+                    )
+
+                    Text(
+                        text = eventDay,
+                        fontFamily = FontFamily.SansSerif,
+                        fontWeight = FontWeight.ExtraBold,
+                        modifier = Modifier
+                            .padding(top = 12.dp, end = 8.dp, bottom = 12.dp)
+                    )
+                }
             }
         }
     }
