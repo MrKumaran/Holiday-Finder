@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -53,11 +54,17 @@ fun HolidayPage(dataManager: DataManager, modifier: Modifier = Modifier) {
 @Composable
 private fun HolidayBar(dataManager: DataManager) {
     Row(
-        modifier = Modifier.horizontalScroll(rememberScrollState())
+        modifier = Modifier
+            .horizontalScroll(rememberScrollState())
+            .padding(horizontal = 16.dp, vertical = 4.dp)
     ) {
         val holidayType = holidayTypeMap(dataManager)
         for (i in holidayType) {
             HolidayType(holidayType = i.key, count = i.value)
+            Spacer(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+            )
         }
     }
 }
@@ -67,22 +74,23 @@ private fun HolidayType(holidayType:String, count:Int) {
          Card(
              modifier = Modifier
                  .padding(
-                     horizontal = 20.dp,
-                     vertical = 8.dp
-                 ),
+                     top = 8.dp,
+                     bottom = 8.dp,
+                 )
+                 .shadow(8.dp, shape = RoundedCornerShape(50)),
              colors = cardColors(Color.White),
-             border = BorderStroke(1.dp, Color.Black),
-             shape = RoundedCornerShape(40),
+             border = BorderStroke(.2.dp, Color.Gray),
+             shape = RoundedCornerShape(50),
              elevation = cardElevation(
-                 defaultElevation = 18.dp,
-                 focusedElevation = 12.dp,
-                 pressedElevation = 16.dp,
+                 defaultElevation = 4.dp,
+                 focusedElevation = 4.dp,
+                 pressedElevation = 4.dp,
                  disabledElevation = 0.dp
              )
          ) {
              Row(
                  modifier = Modifier
-                     .padding(8.dp)
+                     .padding(1.dp)
              ) {
                  Text(
                      text = "$holidayType:",
@@ -120,9 +128,9 @@ private fun HolidayCards(eventName: String, eventType: String, eventDate: String
         colors = cardColors(Color.Cyan),
         shape = RoundedCornerShape(20),
         elevation = cardElevation(
-            defaultElevation = 18.dp,
-            focusedElevation = 12.dp,
-            pressedElevation = 16.dp,
+            defaultElevation = 0.dp,
+            focusedElevation = 0.dp,
+            pressedElevation = 0.dp,
             disabledElevation = 0.dp
         )
     ) {

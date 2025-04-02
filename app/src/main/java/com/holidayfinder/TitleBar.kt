@@ -13,7 +13,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
@@ -24,7 +26,7 @@ fun TitleBar(location:String = "India") {
     Row (
         modifier = Modifier
             .background(color = Color.White)
-            .padding(16.dp)
+            .padding(start = 16.dp, top = 28.dp, end = 16.dp, bottom = 16.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ){
