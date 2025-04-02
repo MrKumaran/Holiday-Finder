@@ -1,6 +1,6 @@
 package com.holidayfinder.nonComposables
 
-import com.holidayfinder.DataManager
+import com.holidayfinder.data.DataManager
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
