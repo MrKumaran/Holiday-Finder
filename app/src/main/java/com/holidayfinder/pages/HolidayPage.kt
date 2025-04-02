@@ -3,7 +3,6 @@ package com.holidayfinder.pages
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,14 +22,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.holidayfinder.DataManager
-import com.holidayfinder.R
+import com.holidayfinder.data.DataManager
 import com.holidayfinder.nonComposables.formatDate
 import com.holidayfinder.nonComposables.getDay
 import com.holidayfinder.nonComposables.holidayTypeMap
@@ -45,7 +42,7 @@ fun HolidayPage(dataManager: DataManager, modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
-            HolidayBar(dataManager)
+            HolidayTypeBar(dataManager)
         }
         items(dataManager.holidayList) { holiday ->
             HolidayCards(
@@ -59,7 +56,7 @@ fun HolidayPage(dataManager: DataManager, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun HolidayBar(dataManager: DataManager) {
+private fun HolidayTypeBar(dataManager: DataManager) {
     Row(
         modifier = Modifier
             .horizontalScroll(rememberScrollState())
@@ -85,7 +82,7 @@ private fun HolidayType(holidayType:String, count:Int) {
                      bottom = 8.dp,
                  ),
              colors = cardColors(Color.White),
-             border = BorderStroke(.2.dp, Color.Gray),
+             border = BorderStroke(.4.dp, Color.Gray),
              shape = RoundedCornerShape(50),
              elevation = cardElevation(
                  defaultElevation = 2.dp,
@@ -100,6 +97,8 @@ private fun HolidayType(holidayType:String, count:Int) {
              ) {
                  Text(
                      text = "$holidayType:",
+                     fontFamily = FontFamily.SansSerif,
+                     fontWeight = FontWeight.Medium,
                      modifier = Modifier
                          .padding(start = 12.dp, top = 8.dp, bottom = 8.dp)
                  )
@@ -109,6 +108,8 @@ private fun HolidayType(holidayType:String, count:Int) {
                  )
                  Text(
                      text = count.toString(),
+                     fontFamily = FontFamily.SansSerif,
+                     fontWeight = FontWeight.ExtraBold,
                      modifier = Modifier
                          .padding(end = 12.dp, top = 8.dp, bottom = 8.dp)
                  )
