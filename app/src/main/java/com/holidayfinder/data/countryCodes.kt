@@ -1,6 +1,7 @@
 package com.holidayfinder.data
 
 
+// hash map of all available country with code
 val countryCodes = mapOf(
     "Afghanistan" to "AF",
     "Albania" to "AL",
