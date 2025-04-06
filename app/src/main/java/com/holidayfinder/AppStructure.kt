@@ -7,16 +7,26 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.holidayfinder.data.DataManager
-import com.holidayfinder.pages.HolidayPage
+import com.holidayfinder.pages.holidayPage.HolidayPage
+import com.holidayfinder.pages.holidayPage.TitleBar
 
+// app layout
 @Composable
 fun AppStructure(dataManager: DataManager) {
     Scaffold(
-        contentWindowInsets = WindowInsets.safeDrawing,
-        topBar = { TitleBar(location = "India", year = "2025",dataManager = dataManager) }
+            contentWindowInsets = WindowInsets.safeDrawing,
+            topBar = {
+                TitleBar(
+                    location = "India",
+                    year = "2025",
+                    dataManager = dataManager
+                )
+            }
         ){ innerPadding ->
-        HolidayPage(dataManager = dataManager,
-            modifier =  Modifier.padding(innerPadding)
-        )
+            HolidayPage(
+                dataManager = dataManager,
+                modifier =  Modifier
+                    .padding(innerPadding)
+            )
+        }
     }
-}
