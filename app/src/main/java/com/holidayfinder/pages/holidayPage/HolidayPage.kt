@@ -1,122 +1,93 @@
-package com.holidayfinder.pages
+package com.holidayfinder.pages.holidayPage
 
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults.cardColors
 import androidx.compose.material3.CardDefaults.cardElevation
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.holidayfinder.R
 import com.holidayfinder.data.DataManager
 import com.holidayfinder.nonComposables.formatDate
 import com.holidayfinder.nonComposables.getDay
-import com.holidayfinder.nonComposables.holidayTypeMap
-import com.holidayfinder.ui.theme.littleWhite
+import com.holidayfinder.ui.theme.Filter_70Black
+import com.holidayfinder.ui.theme.White
 
 
+// Entire Holiday page layout
 @Composable
 fun HolidayPage(dataManager: DataManager, modifier: Modifier = Modifier) {
-    LazyColumn(
+    val selectedFilters = remember { mutableStateOf(
+        "None"
+    ) }
+    Column (
         modifier = modifier
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        item {
-            HolidayTypeBar(dataManager)
-        }
-        items(dataManager.holidayList) { holiday ->
-            HolidayCards(
-                eventName = holiday.name,
-                eventType = holiday.type,
-                eventDate = formatDate(holiday.date),
-                eventDay = getDay(holiday.date)
-            )
+            .padding(2.dp)
+    ){
+        // showing large gap
+        HolidayTypeFilter(
+            dataManager = dataManager, filter = selectedFilters.value,
+            onChange = {
+                selectedFilters.value = it
+            })
+        LazyColumn(
+            modifier = modifier
+                .background(White),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            item {
+                if (dataManager.holidayList.isEmpty()) {
+                    Image(
+                        painter = painterResource(R.drawable.wowsuchempty),
+                        contentScale = ContentScale.Crop,
+                        contentDescription = "Empty",
+                        modifier = Modifier
+                            .fillMaxHeight(),
+                        alignment = Alignment.Center
+                    )
+                }
+            }
+
+            items(dataManager.holidayList) { holiday ->
+                if (holiday.type == selectedFilters.value || selectedFilters.value == "None") {
+                    HolidayCards(
+                        eventName = holiday.name,
+                        eventType = holiday.type,
+                        eventDate = formatDate(holiday.date),
+                        eventDay = getDay(holiday.date)
+                    )
+                }
+            }
         }
     }
 }
 
-@Composable
-private fun HolidayTypeBar(dataManager: DataManager) {
-    Row(
-        modifier = Modifier
-            .horizontalScroll(rememberScrollState())
-            .padding(horizontal = 16.dp, vertical = 4.dp)
-    ) {
-        val holidayType = holidayTypeMap(dataManager)
-        for (i in holidayType) {
-            HolidayType(holidayType = i.key, count = i.value)
-            Spacer(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-            )
-        }
-    }
-}
 
-@Composable
-private fun HolidayType(holidayType:String, count:Int) {
-         Card(
-             modifier = Modifier
-                 .padding(
-                     top = 8.dp,
-                     bottom = 8.dp,
-                 ),
-             colors = cardColors(Color.White),
-             border = BorderStroke(.4.dp, Color.Gray),
-             shape = RoundedCornerShape(50),
-             elevation = cardElevation(
-                 defaultElevation = 2.dp,
-                 focusedElevation = 0.dp,
-                 pressedElevation = 0.dp,
-                 disabledElevation = 0.dp
-             )
-         ) {
-             Row(
-                 modifier = Modifier
-                     .padding(1.dp)
-             ) {
-                 Text(
-                     text = "$holidayType:",
-                     fontFamily = FontFamily.SansSerif,
-                     fontWeight = FontWeight.Medium,
-                     modifier = Modifier
-                         .padding(start = 12.dp, top = 8.dp, bottom = 8.dp)
-                 )
-                 Spacer(
-                     modifier = Modifier
-                         .padding(horizontal = 2.dp)
-                 )
-                 Text(
-                     text = count.toString(),
-                     fontFamily = FontFamily.SansSerif,
-                     fontWeight = FontWeight.ExtraBold,
-                     modifier = Modifier
-                         .padding(end = 12.dp, top = 8.dp, bottom = 8.dp)
-                 )
-             }
-         }
-}
-
+// Holiday each card layout
 @Composable
 private fun HolidayCards(eventName: String, eventType: String, eventDate: String, eventDay: String) {
     Card(
@@ -125,7 +96,7 @@ private fun HolidayCards(eventName: String, eventType: String, eventDate: String
                 horizontal = 12.dp,
                 vertical = 8.dp
             )
-            .width(360.dp),
+            .width(400.dp),
         colors = cardColors(Color.Cyan),
         shape = RoundedCornerShape(20),
         elevation = cardElevation(
@@ -136,6 +107,7 @@ private fun HolidayCards(eventName: String, eventType: String, eventDate: String
             modifier = Modifier
                 .padding(vertical = 20.dp, horizontal = 20.dp)
         ) {
+            // Event name ------------------------------------------------------------------------------------
             Text(
                 text = eventName,
                 fontFamily = FontFamily.SansSerif,
@@ -144,20 +116,28 @@ private fun HolidayCards(eventName: String, eventType: String, eventDate: String
                 modifier = Modifier
                     .shadow(
                         elevation = 1.dp,
-                        shape = RoundedCornerShape(20),
+                        shape = RoundedCornerShape(45),
                         clip = true,
                         spotColor = Color.Black
                     )
                     .background(
-                        color = littleWhite,
-                        shape = RoundedCornerShape(20)
+                        color = White,
+                        shape = RoundedCornerShape(45)
                     )
-                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            )
+            HorizontalDivider(
+                modifier = Modifier
+                    .width(380.dp)
+                    .padding(horizontal = 8.dp, vertical = 2.dp),
+                thickness = .4.dp,
+                color = Filter_70Black
             )
             Spacer(
                 modifier = Modifier
                     .padding(vertical = 2.dp)
             )
+            // Event Type ------------------------------------------------------------------------------------
             Text(
                 text = eventType,
                 fontStyle = FontStyle.Italic,
@@ -166,11 +146,13 @@ private fun HolidayCards(eventName: String, eventType: String, eventDate: String
                 modifier = Modifier
                     .padding(horizontal = 12.dp, vertical = 2.dp)
             )
+            // Date and day ------------------------------------------------------------------------------------
             Row(
                 modifier = Modifier
                     .padding(top = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // Date ------------------------------------------------------------------------------------
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -186,7 +168,6 @@ private fun HolidayCards(eventName: String, eventType: String, eventDate: String
                         modifier = Modifier
                             .padding(horizontal = 2.dp)
                     )
-
                     Text(
                         text = eventDate,
                         fontFamily = FontFamily.SansSerif,
@@ -199,6 +180,7 @@ private fun HolidayCards(eventName: String, eventType: String, eventDate: String
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                 )
+                // Day ------------------------------------------------------------------------------------
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
