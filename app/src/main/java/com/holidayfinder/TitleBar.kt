@@ -1,5 +1,6 @@
 package com.holidayfinder
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -18,6 +19,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,17 +31,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.holidayfinder.data.DataManager
 import com.holidayfinder.data.countryCodes
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
-fun TitleBar(location:String = "India", year:String = "2025") {
+fun TitleBar(location:String, year:String, dataManager:DataManager) {
 
     var expandedCountry by remember { mutableStateOf(false) }
     var expandedYear by remember { mutableStateOf(false) }
     var selectedCountry by remember { mutableStateOf(location) }
     var selectedCountryCode by remember { mutableStateOf( countryCodes[location]) }
     var selectedYear by remember { mutableStateOf(year) }
-
+    dataManager.fetchData(derivedStateOf {selectedCountryCode}.value.toString(), derivedStateOf {selectedYear}.value )
     Row(
         modifier = Modifier
             .background(color = Color.White)

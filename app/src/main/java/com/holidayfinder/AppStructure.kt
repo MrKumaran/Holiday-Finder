@@ -13,7 +13,7 @@ import com.holidayfinder.pages.HolidayPage
 fun AppStructure(dataManager: DataManager) {
     Scaffold(
         contentWindowInsets = WindowInsets.safeDrawing,
-        topBar = { TitleBar("India", "2025") }
+        topBar = { TitleBar(location = "India", year = "2025",dataManager = dataManager) }
         ){ innerPadding ->
         HolidayPage(dataManager = dataManager,
             modifier =  Modifier.padding(innerPadding)
