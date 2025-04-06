@@ -1,11 +1,13 @@
-package com.holidayfinder
+package com.holidayfinder.pages.holidayPage
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Place
@@ -33,6 +35,7 @@ import com.holidayfinder.data.DataManager
 import com.holidayfinder.data.countryCodes
 import com.holidayfinder.ui.theme.Black
 
+// title bar layout
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun TitleBar(location: String, year: String, dataManager: DataManager) {
@@ -66,7 +69,7 @@ fun TitleBar(location: String, year: String, dataManager: DataManager) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Country Row
+        // Country Row --------------------------------------------------------------------------------------------------------------------------
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -77,7 +80,10 @@ fun TitleBar(location: String, year: String, dataManager: DataManager) {
             }
             DropdownMenu(
                 expanded = expandedCountry,
-                onDismissRequest = { expandedCountry = false }
+                onDismissRequest = { expandedCountry = false },
+                modifier = Modifier
+                    .height(600.dp)
+                    .width(200.dp)
             ) {
                 countryCodes.forEach { (country, code) ->
                     DropdownMenuItem(
@@ -112,7 +118,7 @@ fun TitleBar(location: String, year: String, dataManager: DataManager) {
 
         }
 
-        // Year Row
+        // Year Row --------------------------------------------------------------------------------------------------------------------------
         Row(verticalAlignment = Alignment.CenterVertically) {
             IconButton(
                 onClick = { expandedYear = !expandedYear }
@@ -121,7 +127,9 @@ fun TitleBar(location: String, year: String, dataManager: DataManager) {
             }
             DropdownMenu(
                 expanded = expandedYear,
-                onDismissRequest = { expandedYear = false }
+                onDismissRequest = { expandedYear = false },
+                modifier = Modifier
+                    .height(500.dp)
             ) {
                 for (years in 2020..2040) {
                     DropdownMenuItem(
