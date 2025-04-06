@@ -11,8 +11,9 @@ import com.holidayfinder.ui.theme.HolidayFinderTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val dataManager = ViewModelProvider(this)
-            .get(DataManager::class.java)
+        // DataManager instance
+        val dataManager = ViewModelProvider(this)[DataManager::class.java]
+        // full screen includes status bar and navigation bar
         enableEdgeToEdge()
         setContent {
             HolidayFinderTheme {
