@@ -19,4 +19,5 @@
  - 20 years range From 2020 to 2040 ***Note:*** Api return empty for some countries&year combo. Example Country: India, year: 2020 will be blank screen
 
 ## Output Screenshot
-
+### Home page
+![](output ss/appGeneralView?raw=true)
