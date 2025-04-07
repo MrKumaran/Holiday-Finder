@@ -11,4 +11,6 @@
 ## Tech used
   - Kotlin
   - Jetpack compose framework
-  - Holiday API by **11Holidays API**
+  - Holiday API by [**11Holidays API**](https://11holidays.com) Note: This api is completely free with no authentication key on date(Apr 7, 2025) of publishing this project v1
+
+
