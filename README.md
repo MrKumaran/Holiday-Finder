@@ -20,4 +20,4 @@
 
 ## Output Screenshot
 ### Home page
-![](outputSS/appGeneralView.png?raw=true| 600x400)
+![](outputSS/appGeneralView.png = 600x400)
