@@ -32,8 +32,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.holidayfinder.R
 import com.holidayfinder.data.DataManager
+import com.holidayfinder.filters.Filters
 import com.holidayfinder.nonComposables.formatDate
 import com.holidayfinder.nonComposables.getDay
+import com.holidayfinder.nonComposables.getMonth
 import com.holidayfinder.ui.theme.Filter_70Black
 import com.holidayfinder.ui.theme.White
 
@@ -41,21 +43,18 @@ import com.holidayfinder.ui.theme.White
 // Entire Holiday page layout
 @Composable
 fun HolidayPage(dataManager: DataManager, modifier: Modifier = Modifier) {
-    val selectedFilters = remember { mutableStateOf(
-        "None"
-    ) }
+
+    // remember filters variables
+    val selectedTypeFilters = remember { mutableStateOf("None") }
+    val selectedDayFilters = remember { mutableStateOf("None") }
+    val selectedMonthFilters = remember { mutableStateOf("None") }
+
         LazyColumn(
             modifier = modifier
                 .background(White),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
-                HolidayTypeFilter(
-                    dataManager = dataManager, filter = selectedFilters.value,
-                    onChange = {
-                        selectedFilters.value = it
-                    })
-
                 if (dataManager.holidayList.isEmpty()) {
                     Image(
                         painter = painterResource(R.drawable.wowsuchempty),
@@ -68,13 +67,41 @@ fun HolidayPage(dataManager: DataManager, modifier: Modifier = Modifier) {
                 }
             }
 
+            // Filters ------------------------------------------------------------------------------------------
+            item {
+                Filters.HolidayTypeFilter(
+                    dataManager = dataManager,
+                    selectedHolidayType = selectedTypeFilters.value,
+                    onChange = {
+                        selectedTypeFilters.value = it
+                    })
+                Filters.HolidayDayFilter(
+                    dataManager = dataManager,
+                    selectedDay = selectedDayFilters.value,
+                    onChange = {
+                        selectedDayFilters.value = it
+                    })
+                Filters.HolidayMonthFilter(
+                    dataManager = dataManager,
+                    selectedMonth = selectedMonthFilters.value,
+                    onChange = {
+                        selectedMonthFilters.value = it
+                    })
+            }
+
             items(dataManager.holidayList) { holiday ->
-                if (holiday.type == selectedFilters.value || selectedFilters.value == "None") {
+                val day = getDay(holiday.date)
+                val month = getMonth(holiday.date)
+                if (
+                    (holiday.type == selectedTypeFilters.value || selectedTypeFilters.value == "None") &&
+                    (day == selectedDayFilters.value || selectedDayFilters.value == "None") &&
+                    (month == selectedMonthFilters.value || selectedMonthFilters.value == "None")
+                    ) {
                     HolidayCards(
                         eventName = holiday.name,
                         eventType = holiday.type,
                         eventDate = formatDate(holiday.date),
-                        eventDay = getDay(holiday.date)
+                        eventDay = day
                     )
                 }
             }

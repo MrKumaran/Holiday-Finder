@@ -1,4 +1,4 @@
-package com.holidayfinder.pages.holidayPage
+package com.holidayfinder
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background

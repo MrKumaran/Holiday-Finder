@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.holidayfinder.data.DataManager
 import com.holidayfinder.pages.holidayPage.HolidayPage
-import com.holidayfinder.pages.holidayPage.TitleBar
 
 // app layout
 @Composable
