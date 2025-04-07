@@ -19,11 +19,15 @@
  - 20 years range From 2020 to 2040 ***Note:*** Api return empty for some countries&year combo. Example Country: India, year: 2020 will be blank screen
 
 ## Output Screenshot
+
 ### Home page
 <img src="outputSS/appGeneralView.png" width="400" height="900">
+
 ### Country Selection
 <img src="outputSS/countrySelection.png" width="400" height="900">
+
 ### Holiday Filter Selection
 <img src="outputSS/holidayFilterSelection.png" width="400" height="900">
+
 ### Year Selection
 <img src="outputSS/yearSelection.png" width="400" height="900">
