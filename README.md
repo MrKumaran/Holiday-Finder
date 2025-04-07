@@ -19,7 +19,7 @@
  - 194 countries
  - 20 years range From 2020 to 2040 ***Note:*** Api return empty for some countries&year combo. Example Country: India, year: 2020 will be blank screen
 
-## Output Screenshot *Outdated v1 ss*
+## Output Screenshot v2
 
 ### Home page
 <img src="outputSS/appGeneralView.png" width="400" height="900">
