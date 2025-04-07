@@ -11,4 +11,4 @@
 ## Tech used
   - Kotlin
   - Jetpack compose framework
-  - Holiday API by *11Holidays API*
+  - Holiday API by **11Holidays API**
