@@ -4,11 +4,11 @@
   - It also consist of Filter mechanism to filter based on Holiday type
 
 ## Planned updates
-  - Adding more Filter options based on
+  - ~Adding more Filter options based on~
     - ~Days~
     - ~Month~
-    - Themes(Dark and Light nothing Fancy)
-    - Entire UI rebranding
+  - Themes(Dark and Light nothing Fancy)
+  - Entire UI rebranding
 
 ## Tech used
   - Kotlin
@@ -19,7 +19,7 @@
  - 194 countries
  - 20 years range From 2020 to 2040 ***Note:*** Api return empty for some countries&year combo. Example Country: India, year: 2020 will be blank screen
 
-## Output Screenshot
+## Output Screenshot *Outdates v1 ss*
 
 ### Home page
 <img src="outputSS/appGeneralView.png" width="400" height="900">
