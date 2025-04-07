@@ -5,9 +5,10 @@
 
 ## Planned updates
   - Adding more Filter options based on
-    - Days
-    - Month
+    - ~Days~
+    - ~Month~
     - Themes(Dark and Light nothing Fancy)
+    - Entire UI rebranding
 
 ## Tech used
   - Kotlin
