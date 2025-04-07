@@ -66,7 +66,6 @@ fun HolidayPage(dataManager: DataManager, modifier: Modifier = Modifier) {
                     )
                 }
             }
-
             // Filters ------------------------------------------------------------------------------------------
             item {
                 Filters.HolidayTypeFilter(
@@ -88,7 +87,7 @@ fun HolidayPage(dataManager: DataManager, modifier: Modifier = Modifier) {
                         selectedMonthFilters.value = it
                     })
             }
-
+            // Cards ---------------------------------
             items(dataManager.holidayList) { holiday ->
                 val day = getDay(holiday.date)
                 val month = getMonth(holiday.date)
