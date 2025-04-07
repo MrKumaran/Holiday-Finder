@@ -20,4 +20,4 @@
 
 ## Output Screenshot
 ### Home page
-![](outputSS/appGeneralView?raw=true)
+![](outputSS/appGeneralView.png?raw=true)
