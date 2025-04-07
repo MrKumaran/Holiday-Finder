@@ -20,4 +20,4 @@
 
 ## Output Screenshot
 ### Home page
-<img src="outputSS/appGeneralView.png" width="400" height="800">
+<img src="outputSS/appGeneralView.png" width="400" height="900">
