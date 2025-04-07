@@ -7,7 +7,7 @@
   - Adding more Filter options based on
     - Days
     - Month
-    - Themes(Dark and White nothing Fancy)
+    - Themes(Dark and Light nothing Fancy)
 
 ## Tech used
   - Kotlin
