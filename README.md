@@ -7,3 +7,8 @@
   - Adding more Filter options based on
     - Days
     - Month
+
+## Tech used
+  - Kotlin
+  - Jetpack compose framework
+  - Holiday API by *11Holidays API*
