@@ -26,8 +26,8 @@
 ### Country Selection
 <img src="outputSS/countrySelection.png" width="400" height="900">
 
-### Holiday Filter Selection
-<img src="outputSS/holidayFilterSelection.png" width="400" height="900">
-
 ### Year Selection
 <img src="outputSS/yearSelection.png" width="400" height="900">
+
+### Holiday Filter Selection
+<img src="outputSS/holidayFilterSelection.png" width="400" height="900">
