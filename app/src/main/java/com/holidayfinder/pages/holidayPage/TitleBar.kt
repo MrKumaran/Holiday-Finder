@@ -61,7 +61,7 @@ fun TitleBar(location: String, year: String, dataManager: DataManager) {
             )
             .padding(
                 start = 16.dp,
-                top = 48.dp,
+                top = 24.dp,
                 end = 24.dp,
                 bottom = 0.dp
             )

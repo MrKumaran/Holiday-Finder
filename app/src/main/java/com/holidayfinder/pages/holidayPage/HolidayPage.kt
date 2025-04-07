@@ -44,22 +44,18 @@ fun HolidayPage(dataManager: DataManager, modifier: Modifier = Modifier) {
     val selectedFilters = remember { mutableStateOf(
         "None"
     ) }
-    Column (
-        modifier = modifier
-            .padding(2.dp)
-    ){
-        // showing large gap
-        HolidayTypeFilter(
-            dataManager = dataManager, filter = selectedFilters.value,
-            onChange = {
-                selectedFilters.value = it
-            })
         LazyColumn(
             modifier = modifier
                 .background(White),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
+                HolidayTypeFilter(
+                    dataManager = dataManager, filter = selectedFilters.value,
+                    onChange = {
+                        selectedFilters.value = it
+                    })
+
                 if (dataManager.holidayList.isEmpty()) {
                     Image(
                         painter = painterResource(R.drawable.wowsuchempty),
@@ -84,7 +80,6 @@ fun HolidayPage(dataManager: DataManager, modifier: Modifier = Modifier) {
             }
         }
     }
-}
 
 
 // Holiday each card layout
