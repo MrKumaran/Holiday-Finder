@@ -1,16 +1,14 @@
 package com.holidayfinder.filters
 
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
-import androidx.compose.material3.ElevatedFilterChip
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,20 +23,22 @@ import com.holidayfinder.nonComposables.holidayDaysMap
 import com.holidayfinder.nonComposables.holidayMonthsMap
 import com.holidayfinder.nonComposables.holidayTypeMap
 
+
 object Filters {
 
     // Filter row layout
     @Composable
-    fun HolidayDayFilter(dataManager: DataManager,
-                         selectedDay: String,
-                         onChange: (String) -> Unit
+    fun HolidayDayFilter(
+        dataManager: DataManager,
+        selectedDay: String,
+        onChange: (String) -> Unit
     ) {
         val day = holidayDaysMap(dataManager)
         val filterDayOptions = day.keys.toList()
 
         Row(
             modifier = Modifier
-                .padding(horizontal = 8.dp, vertical = 2.dp)
+                .padding(horizontal = 8.dp, vertical = 0.dp)
                 .horizontalScroll(rememberScrollState())
         ) {
             for (filterOption in filterDayOptions) {
@@ -60,16 +60,17 @@ object Filters {
 
     // Filter row layout
     @Composable
-    fun HolidayMonthFilter(dataManager: DataManager,
-                           selectedMonth: String,
-                           onChange: (String) -> Unit
+    fun HolidayMonthFilter(
+        dataManager: DataManager,
+        selectedMonth: String,
+        onChange: (String) -> Unit
     ) {
         val month = holidayMonthsMap(dataManager)
         val filterMonthOptions = month.keys.toList()
 
         Row(
             modifier = Modifier
-                .padding(horizontal = 8.dp, vertical = 2.dp)
+                .padding(horizontal = 8.dp, vertical = 0.dp)
                 .horizontalScroll(rememberScrollState())
         ) {
             for (filterOption in filterMonthOptions) {
@@ -92,9 +93,10 @@ object Filters {
 
     // Filter row layout
     @Composable
-    fun HolidayTypeFilter(dataManager: DataManager,
-                          selectedHolidayType: String,
-                          onChange: (String) -> Unit
+    fun HolidayTypeFilter(
+        dataManager: DataManager,
+        selectedHolidayType: String,
+        onChange: (String) -> Unit
     ) {
 
         val holidayType = holidayTypeMap(dataManager)
@@ -102,7 +104,7 @@ object Filters {
 
         Row(
             modifier = Modifier
-                .padding(horizontal = 8.dp, vertical = 2.dp)
+                .padding(horizontal = 8.dp, vertical = 0.dp)
                 .horizontalScroll(rememberScrollState())
         ) {
             for (filterOption in filterOptions) {
@@ -124,8 +126,13 @@ object Filters {
 
     // Filter Chip layout
     @Composable
-    private fun FilterChipItem(chipText: String, count: Int?, isSelected: Boolean, onChipClick: (String) -> Unit) {
-        ElevatedFilterChip(
+    private fun FilterChipItem(
+        chipText: String,
+        count: Int?,
+        isSelected: Boolean,
+        onChipClick: (String) -> Unit
+    ) {
+        FilterChip(
             selected = isSelected,
             onClick = { onChipClick(chipText) },
             label = {
@@ -134,6 +141,13 @@ object Filters {
                         text = "$chipText:",
                         fontWeight = FontWeight.Medium,
                         fontFamily = FontFamily.SansSerif,
+                        color =
+                            if(isSystemInDarkTheme())
+                                if (!isSelected)
+                                    MaterialTheme.colorScheme.primary
+                                else
+                                    MaterialTheme.colorScheme.tertiary
+                            else MaterialTheme.colorScheme.primary,
                         fontSize = 16.sp
                     )
                     Spacer(
@@ -142,32 +156,29 @@ object Filters {
                     )
                     Text(
                         text = count.toString(),
+                        color =
+                            if(isSystemInDarkTheme())
+                                if (!isSelected)
+                                    MaterialTheme.colorScheme.primary
+                                else
+                                    MaterialTheme.colorScheme.tertiary
+                            else MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold,
                         fontFamily = FontFamily.SansSerif,
                         fontSize = 16.sp
                     )
                 }
             },
-            leadingIcon = if (isSelected) {
-                {
-                    Icon(
-                        imageVector = Icons.Filled.Done,
-                        contentDescription = "Selected icon"
-                    )
-                }
-            } else {
-                null
-            },
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
-            shape = RoundedCornerShape(50),
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 0.dp),
+            shape = RoundedCornerShape(40),
             colors = FilterChipDefaults.filterChipColors(
-                selectedContainerColor = MaterialTheme.colorScheme.primary,
-                selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
-                containerColor = MaterialTheme.colorScheme.onPrimary,
-                labelColor = MaterialTheme.colorScheme.primary
+                selectedContainerColor = MaterialTheme.colorScheme.secondary,
+                selectedLabelColor = MaterialTheme.colorScheme.primary,
+                containerColor = MaterialTheme.colorScheme.background,
+                labelColor = MaterialTheme.colorScheme.background
             ),
-            elevation =  FilterChipDefaults.elevatedFilterChipElevation(
-                elevation = 4.dp
+            elevation = FilterChipDefaults.elevatedFilterChipElevation(
+                elevation = 0.dp
             )
         )
     }

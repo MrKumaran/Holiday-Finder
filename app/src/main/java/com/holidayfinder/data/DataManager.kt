@@ -26,9 +26,7 @@ import kotlinx.coroutines.launch
 // https://api.11holidays.com/v1/countries api
 // Using country Code 2 letter
 
-data class Holiday(val holidayID:String, val name:String, val date:String,
-                   val description:String, val occasionID:String, val country:String,
-                   val type:String, val createdAt:String, val updatedAt:String)
+data class Holiday(val holidayID:String, val name:String, val date:String, val type:String)
 
 
 class DataManager(thisApp: Application): AndroidViewModel(thisApp) {

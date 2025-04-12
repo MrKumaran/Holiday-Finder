@@ -1,13 +1,18 @@
 package com.holidayfinder
 
 import android.annotation.SuppressLint
+//import android.content.Context
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Place
@@ -27,19 +32,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+//import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.holidayfinder.data.DataManager
 import com.holidayfinder.data.countryCodes
-import com.holidayfinder.ui.theme.Black
 
 // title bar layout
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun TitleBar(location: String, year: String, dataManager: DataManager) {
-
+//    val context = LocalContext.current
     // remembering variables
     var expandedCountry by remember { mutableStateOf(false) }
     var expandedYear by remember { mutableStateOf(false) }
@@ -52,115 +57,166 @@ fun TitleBar(location: String, year: String, dataManager: DataManager) {
         derivedStateOf { selectedCountryCode }.value.toString(),
         derivedStateOf { selectedYear }.value
     )
-
-    // Title bar row
-    Row(
-        modifier = Modifier
-            .background(
-                color = MaterialTheme.colorScheme.primary
-            )
-            .padding(
-                start = 16.dp,
-                top = 24.dp,
-                end = 24.dp,
-                bottom = 0.dp
-            )
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        // Country Row --------------------------------------------------------------------------------------------------------------------------
+//    val filename = "myfile.txt"
+//    val fileContents = "Hello world!"
+//    context.openFileOutput(filename, Context.MODE_PRIVATE).use {
+//        it.write(fileContents.toByteArray())
+//    }
+    Column {
+        // Title bar row
         Row(
+            modifier = Modifier
+                .background(
+                    color = MaterialTheme.colorScheme.background
+                )
+                .padding(
+                    start = 16.dp,
+                    top = 24.dp,
+                    end = 24.dp,
+                    bottom = 0.dp
+                )
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(
-                onClick = { expandedCountry = !expandedCountry }
+            // Country Row --------------------------------------------------------------------------------------------------------------------------
+            Row(
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(Icons.Outlined.Place, contentDescription = "Location")
-            }
-            DropdownMenu(
-                expanded = expandedCountry,
-                onDismissRequest = { expandedCountry = false },
-                modifier = Modifier
-                    .height(600.dp)
-                    .width(200.dp)
-            ) {
-                countryCodes.forEach { (country, code) ->
-                    DropdownMenuItem(
-                        text = {
-                            Text(
-                                text = country,
-                                // Font size based on selection
-                                fontSize = if (country == selectedCountry) 24.sp else 16.sp,
-                                fontFamily = FontFamily.SansSerif,
-                                // changing font weight based on selection
-                                fontWeight = if (country == selectedCountry) FontWeight.ExtraBold else FontWeight.Normal
-                            )
-                        },
-                        onClick = {
-                            selectedCountry = country
-                            selectedCountryCode = code
-                            expandedCountry = false
-                        },
-                        colors = MenuDefaults.itemColors(Black)
-                    )
-                    HorizontalDivider(
-                        thickness = .2.dp
+                IconButton(
+                    onClick = { expandedCountry = !expandedCountry }
+                ) {
+                    Icon(
+                        Icons.Outlined.Place,
+                        contentDescription = "Location",
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
-            }
-            Text(
-                text = selectedCountry,
-                fontWeight = FontWeight.Medium,
-                fontFamily = FontFamily.SansSerif,
-                fontSize = 24.sp
-            )
+                DropdownMenu(
+                    expanded = expandedCountry,
+                    onDismissRequest = { expandedCountry = false },
+                    modifier = Modifier
+                        .height(600.dp)
+                        .width(200.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.background,
+                            shape = RoundedCornerShape(4)
+                        )
+                        .border(.1.dp, MaterialTheme.colorScheme.primary)
+                ) {
+                    countryCodes.forEach { (country, code) ->
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = country,
+                                    // Font size based on selection
+                                    fontSize =
+                                        if (country == selectedCountry)
+                                            24.sp
+                                        else
+                                            16.sp,
+                                    fontFamily = FontFamily.SansSerif,
+                                    // changing font weight based on selection
+                                    fontWeight =
+                                        if (country == selectedCountry)
+                                            FontWeight.ExtraBold
+                                        else
+                                            FontWeight.Normal,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            },
+                            onClick = {
+                                selectedCountry = country
+                                selectedCountryCode = code
+                                expandedCountry = false
+                            },
+                            colors = MenuDefaults.itemColors(MaterialTheme.colorScheme.primary)
+                        )
+                        HorizontalDivider(
+                            thickness = .2.dp,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+                Text(
+                    text = selectedCountry,
+                    fontWeight = FontWeight.Medium,
+                    fontFamily = FontFamily.SansSerif,
+                    fontSize = 24.sp,
+                    color = MaterialTheme.colorScheme.primary
+                )
 
-        }
-
-        // Year Row --------------------------------------------------------------------------------------------------------------------------
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(
-                onClick = { expandedYear = !expandedYear }
-            ) {
-                Icon(Icons.Outlined.DateRange, contentDescription = "Year")
             }
-            DropdownMenu(
-                expanded = expandedYear,
-                onDismissRequest = { expandedYear = false },
-                modifier = Modifier
-                    .height(500.dp)
-            ) {
-                for (years in 2020..2040) {
-                    DropdownMenuItem(
-                        text = {
-                            Text(
-                                text = years.toString(),
-                                // Font size based on selection
-                                fontSize = if (years.toString() == selectedYear) 24.sp else 16.sp,
-                                fontFamily = FontFamily.SansSerif,
-                                // Font weight based on selection
-                                fontWeight = if (years.toString() == selectedYear) FontWeight.ExtraBold else FontWeight.Normal
-                            )
-                        },
-                        onClick = {
-                            selectedYear = years.toString()
-                            expandedYear = false
-                        }
-                    )
-                    HorizontalDivider(
-                        thickness = .2.dp
+
+            // Year Row --------------------------------------------------------------------------------------------------------------------------
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconButton(
+                    onClick = { expandedYear = !expandedYear }
+                ) {
+                    Icon(
+                        Icons.Outlined.DateRange,
+                        contentDescription = "Year",
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
+                DropdownMenu(
+                    expanded = expandedYear,
+                    onDismissRequest = { expandedYear = false },
+                    modifier = Modifier
+                        .height(500.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.background,
+                            shape = RoundedCornerShape(4)
+                        )
+                        .border(.1.dp, MaterialTheme.colorScheme.primary)
+                ) {
+                    for (years in 2020..2040) {
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = years.toString(),
+                                    // Font size based on selection
+                                    fontSize =
+                                        if (years.toString() == selectedYear)
+                                            24.sp
+                                        else
+                                            16.sp,
+                                    fontFamily = FontFamily.SansSerif,
+                                    // Font weight based on selection
+                                    fontWeight =
+                                        if (years.toString() == selectedYear)
+                                            FontWeight.ExtraBold
+                                        else
+                                            FontWeight.Normal,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            },
+                            onClick = {
+                                selectedYear = years.toString()
+                                expandedYear = false
+                            },
+                            contentPadding = PaddingValues(30.dp, 0.dp, 0.dp, 0.dp)
+                        )
+                        HorizontalDivider(
+                            thickness = .2.dp,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+
+                Text(
+                    text = selectedYear,
+                    fontWeight = FontWeight.Medium,
+                    fontFamily = FontFamily.SansSerif,
+                    fontSize = 24.sp,
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
 
-            Text(
-                text = selectedYear,
-                fontWeight = FontWeight.Medium,
-                fontFamily = FontFamily.SansSerif,
-                fontSize = 24.sp,
-            )
-
         }
+        HorizontalDivider(
+            thickness = 1.dp,
+            color = MaterialTheme.colorScheme.primary
+        )
     }
 }
