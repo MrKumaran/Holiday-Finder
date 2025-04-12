@@ -7,8 +7,10 @@
   - ~Adding more Filter options based on~
     - ~Days~
     - ~Month~
-  - Themes(Dark and Light nothing Fancy)
+  - ~Themes(Dark and Light nothing Fancy)~
   - Entire UI rebranding
+  - Searching option
+  - Bookmarking events
 
 ## Tech used
   - Kotlin
@@ -19,7 +21,7 @@
  - 194 countries
  - 20 years range From 2020 to 2040 ***Note:*** Api return empty for some countries&year combo. Example Country: India, year: 2020 will be blank screen
 
-## Output Screenshot v2
+## Output Screenshot v2 outdated will update soon
 
 ### Home page
 <img src="outputSS/appGeneralView.png" width="400" height="900">
