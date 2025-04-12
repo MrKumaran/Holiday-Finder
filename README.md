@@ -34,3 +34,9 @@
 
 ### Holiday Filter Selection
 <img src="outputSS/holidayFilterSelection.png" width="400" height="900">
+
+## Have an Idea for feature or any error encounter?
+### Open issue in issues tab, Thanks for Using
+
+#### If you ever plan to use this as base project giving credits to this repo is appreciated
+
