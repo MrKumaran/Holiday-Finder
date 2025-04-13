@@ -14,10 +14,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults.cardColors
 import androidx.compose.material3.CardDefaults.cardElevation
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +33,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -37,65 +42,62 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.holidayfinder.R
 import com.holidayfinder.data.DataManager
+import com.holidayfinder.data.SavedHoliday
 import com.holidayfinder.filters.Filters
 import com.holidayfinder.nonComposables.formatDate
 import com.holidayfinder.nonComposables.getDay
 import com.holidayfinder.nonComposables.getMonth
+import com.holidayfinder.nonComposables.saveHolidaysToFile
+import com.holidayfinder.nonComposables.savedHoliday
 
 // Entire Holiday page layout
 @Composable
 fun HolidayPage(
-    dataManager: DataManager,
-    modifier: Modifier = Modifier
+    dataManager: DataManager, modifier: Modifier = Modifier
 ) {
-
     // remember filters variables
     val selectedTypeFilters = remember { mutableStateOf("None") }
     val selectedDayFilters = remember { mutableStateOf("None") }
     val selectedMonthFilters = remember { mutableStateOf("None") }
-
+    var holidayList = dataManager.holidayList.filter { holiday ->
+        (holiday.type == selectedTypeFilters.value || selectedTypeFilters.value == "None") && (getDay(
+            holiday.date
+        ) == selectedDayFilters.value || selectedDayFilters.value == "None") && (getMonth(holiday.date) == selectedMonthFilters.value || selectedMonthFilters.value == "None")
+    }
+    println(holidayList)
     LazyColumn(
-        modifier = modifier
-            .background(
-                MaterialTheme.colorScheme.background
-            ),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = modifier.background(
+            MaterialTheme.colorScheme.background
+        ), horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
-            if (dataManager.holidayList.isEmpty()) {
-                Image(
-                    painter = painterResource(R.drawable.wowsuchempty),
-                    contentScale = ContentScale.Crop,
-                    contentDescription = "Empty",
-                    modifier = Modifier
-                        .fillMaxHeight(),
-                    alignment = Alignment.Center
-                )
-            }
-        }
-        // Filters ------------------------------------------------------------------------------------------
-        item {
             Filters.HolidayTypeFilter(
-                dataManager = dataManager,
+                holidayList = holidayList,
                 selectedHolidayType = selectedTypeFilters.value,
                 onChange = {
                     selectedTypeFilters.value = it
                 })
             Filters.HolidayDayFilter(
-                dataManager = dataManager,
-                selectedDay = selectedDayFilters.value,
-                onChange = {
+                holidayList = holidayList, selectedDay = selectedDayFilters.value, onChange = {
                     selectedDayFilters.value = it
                 })
             Filters.HolidayMonthFilter(
-                dataManager = dataManager,
-                selectedMonth = selectedMonthFilters.value,
-                onChange = {
+                holidayList = holidayList, selectedMonth = selectedMonthFilters.value, onChange = {
                     selectedMonthFilters.value = it
                 })
+            if (holidayList.isEmpty()) {
+                Image(
+                    painter = painterResource(R.drawable.wowsuchempty),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = "Empty",
+                    modifier = Modifier.fillMaxHeight(),
+                    alignment = Alignment.Center
+                )
+            }
         }
+        // Filters ------------------------------------------------------------------------------------------
         // Cards ---------------------------------
-        items(dataManager.holidayList) { holiday ->
+        items(holidayList) { holiday ->
             val day = getDay(holiday.date)
             val month = getMonth(holiday.date)
             if (
@@ -107,10 +109,12 @@ fun HolidayPage(
                     eventName = holiday.name,
                     eventType = holiday.type,
                     eventDate = formatDate(holiday.date),
-                    eventDay = day
+                    eventDay = day,
+                    country = holiday.country
                 )
             }
         }
+
     }
 }
 
@@ -118,16 +122,16 @@ fun HolidayPage(
 // Holiday each card layout
 @Composable
 private fun HolidayCards(
-    eventName: String,
-    eventType: String,
-    eventDate: String,
-    eventDay: String
+    eventName: String, eventType: String, eventDate: String, eventDay: String, country: String
 ) {
+    val context = LocalContext.current
+    var savedHolidays = remember {
+        mutableStateOf(savedHoliday(context))
+    }
     Card(
         modifier = Modifier
             .padding(
-                horizontal = 12.dp,
-                vertical = 8.dp
+                horizontal = 12.dp, vertical = 8.dp
             )
             .width(400.dp),
         colors = cardColors(MaterialTheme.colorScheme.background),
@@ -136,19 +140,21 @@ private fun HolidayCards(
             defaultElevation = 0.dp
         ),
         border = BorderStroke(
-            width = 1.dp,
-            brush = Brush.sweepGradient(
-                colors = if(isSystemInDarkTheme())
-                    listOf(Color.Black,Color.Blue, Color.Yellow, Color.Magenta, Color.Black)
-                else
-                    listOf(Color.White,Color.Black, Color.Blue,Color.Magenta,Color.White),
+            width = 1.dp, brush = Brush.sweepGradient(
+                colors = if (isSystemInDarkTheme()) listOf(
+                    Color.Black,
+                    Color.Blue,
+                    Color.Yellow,
+                    Color.Magenta,
+                    Color.Black
+                )
+                else listOf(Color.White, Color.Black, Color.Blue, Color.Magenta, Color.White),
                 center = Offset(200f, 100f)
-    )
+            )
         )
     ) {
         Column(
-            modifier = Modifier
-                .padding(vertical = 20.dp, horizontal = 20.dp)
+            modifier = Modifier.padding(vertical = 20.dp, horizontal = 20.dp)
         ) {
             // Event name ------------------------------------------------------------------------------------
             Row {
@@ -158,41 +164,58 @@ private fun HolidayCards(
                     fontWeight = FontWeight.ExtraBold,
                     color = MaterialTheme.colorScheme.primary,
                     fontSize = 16.sp,
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
 
                 )
                 Spacer(
                     modifier = Modifier.weight(1f)
                 )
-//                Icon(
-//                    imageVector = Icons.Outlined.Star,
-//                    contentDescription = "Favorite"
-//                )
+                IconButton(
+                    onClick = {
+                        if (
+                            savedHolidays.value?.any { it.name == eventName } == false ||
+                            savedHolidays.value?.any { it.name == eventName } == null
+                            ) {
+                            savedHolidays.value = saveHolidaysToFile(
+                                context = context, holidayClass = SavedHoliday(
+                                    name = eventName,
+                                    date = eventDate,
+                                    type = eventType,
+                                    day = eventDay,
+                                    country = country
+                                )
+                            )
+                        }
+                    }) {
+                    Icon(
+                        imageVector = Icons.Filled.Star,
+                        contentDescription = "Favorite",
+                        tint =
+                            if (savedHolidays.value?.any { it.name == eventName } == true)
+                                MaterialTheme.colorScheme.tertiary
+                            else
+                                MaterialTheme.colorScheme.primary
+                    )
+                }
             }
             HorizontalDivider(
                 modifier = Modifier
                     .width(380.dp)
                     .padding(horizontal = 8.dp, vertical = 2.dp)
                     .border(
-                        width = .2.dp,
-                        brush = Brush.sweepGradient(
+                        width = .2.dp, brush = Brush.sweepGradient(
                             colors = listOf(
                                 MaterialTheme.colorScheme.primary,
                                 MaterialTheme.colorScheme.primary,
                                 MaterialTheme.colorScheme.primary,
                                 MaterialTheme.colorScheme.primary,
                                 MaterialTheme.colorScheme.tertiary
-                            ),
-                            center = Offset(200f, 100f)
-                        ),
-                        shape = RoundedCornerShape(20)
-                    ),
-                thickness = .4.dp
+                            ), center = Offset(200f, 100f)
+                        ), shape = RoundedCornerShape(20)
+                    ), thickness = .4.dp
             )
             Spacer(
-                modifier = Modifier
-                    .padding(vertical = 2.dp)
+                modifier = Modifier.padding(vertical = 2.dp)
             )
             // Event Type ------------------------------------------------------------------------------------
             Text(
@@ -200,14 +223,12 @@ private fun HolidayCards(
                 fontStyle = FontStyle.Italic,
                 fontFamily = FontFamily.SansSerif,
                 fontSize = 12.sp,
-                modifier = Modifier
-                    .padding(horizontal = 12.dp, vertical = 2.dp),
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 2.dp),
                 color = MaterialTheme.colorScheme.primary
             )
             // Date and day ------------------------------------------------------------------------------------
             Row(
-                modifier = Modifier
-                    .padding(top = 12.dp),
+                modifier = Modifier.padding(top = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // Date ------------------------------------------------------------------------------------
@@ -218,27 +239,23 @@ private fun HolidayCards(
                         text = "Date:",
                         fontFamily = FontFamily.SansSerif,
                         fontWeight = FontWeight.Medium,
-                        modifier = Modifier
-                            .padding(start = 8.dp, top = 12.dp, bottom = 12.dp),
+                        modifier = Modifier.padding(start = 8.dp, top = 12.dp, bottom = 12.dp),
                         color = MaterialTheme.colorScheme.primary
                     )
 
                     Spacer(
-                        modifier = Modifier
-                            .padding(horizontal = 2.dp)
+                        modifier = Modifier.padding(horizontal = 2.dp)
                     )
                     Text(
                         text = eventDate,
                         fontFamily = FontFamily.SansSerif,
                         fontWeight = FontWeight.ExtraBold,
-                        modifier = Modifier
-                            .padding(top = 12.dp, end = 4.dp, bottom = 12.dp),
+                        modifier = Modifier.padding(top = 12.dp, end = 4.dp, bottom = 12.dp),
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
                 Spacer(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 )
                 // Day ------------------------------------------------------------------------------------
                 Row(
@@ -248,8 +265,7 @@ private fun HolidayCards(
                         text = "Day:",
                         fontFamily = FontFamily.SansSerif,
                         fontWeight = FontWeight.Medium,
-                        modifier = Modifier
-                            .padding(start = 4.dp, top = 12.dp, bottom = 12.dp),
+                        modifier = Modifier.padding(start = 4.dp, top = 12.dp, bottom = 12.dp),
                         color = MaterialTheme.colorScheme.primary
                     )
 
@@ -261,8 +277,7 @@ private fun HolidayCards(
                         text = eventDay,
                         fontFamily = FontFamily.SansSerif,
                         fontWeight = FontWeight.ExtraBold,
-                        modifier = Modifier
-                            .padding(top = 12.dp, end = 8.dp, bottom = 12.dp),
+                        modifier = Modifier.padding(top = 12.dp, end = 8.dp, bottom = 12.dp),
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -270,3 +285,5 @@ private fun HolidayCards(
         }
     }
 }
+
+

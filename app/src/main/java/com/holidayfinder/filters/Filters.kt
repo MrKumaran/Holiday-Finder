@@ -18,10 +18,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.holidayfinder.data.DataManager
+import com.holidayfinder.data.Holiday
 import com.holidayfinder.nonComposables.holidayDaysMap
 import com.holidayfinder.nonComposables.holidayMonthsMap
 import com.holidayfinder.nonComposables.holidayTypeMap
+import com.holidayfinder.ui.theme.Black
 
 
 object Filters {
@@ -29,11 +30,11 @@ object Filters {
     // Filter row layout
     @Composable
     fun HolidayDayFilter(
-        dataManager: DataManager,
+        holidayList:List<Holiday>,
         selectedDay: String,
         onChange: (String) -> Unit
     ) {
-        val day = holidayDaysMap(dataManager)
+        val day = holidayDaysMap(holidayList)
         val filterDayOptions = day.keys.toList()
 
         Row(
@@ -61,11 +62,11 @@ object Filters {
     // Filter row layout
     @Composable
     fun HolidayMonthFilter(
-        dataManager: DataManager,
+        holidayList:List<Holiday>,
         selectedMonth: String,
         onChange: (String) -> Unit
     ) {
-        val month = holidayMonthsMap(dataManager)
+        val month = holidayMonthsMap(holidayList)
         val filterMonthOptions = month.keys.toList()
 
         Row(
@@ -94,12 +95,12 @@ object Filters {
     // Filter row layout
     @Composable
     fun HolidayTypeFilter(
-        dataManager: DataManager,
+        holidayList:List<Holiday>,
         selectedHolidayType: String,
         onChange: (String) -> Unit
     ) {
 
-        val holidayType = holidayTypeMap(dataManager)
+        val holidayType = holidayTypeMap(holidayList)
         val filterOptions = holidayType.keys.toList()
 
         Row(
@@ -146,7 +147,7 @@ object Filters {
                                 if (!isSelected)
                                     MaterialTheme.colorScheme.primary
                                 else
-                                    MaterialTheme.colorScheme.tertiary
+                                    Black
                             else MaterialTheme.colorScheme.primary,
                         fontSize = 16.sp
                     )
@@ -161,7 +162,7 @@ object Filters {
                                 if (!isSelected)
                                     MaterialTheme.colorScheme.primary
                                 else
-                                    MaterialTheme.colorScheme.tertiary
+                                    Black
                             else MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold,
                         fontFamily = FontFamily.SansSerif,
