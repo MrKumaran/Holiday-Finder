@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 
 /* API Response */
 //"holiday_id": 14144,
@@ -26,7 +27,10 @@ import kotlinx.coroutines.launch
 // https://api.11holidays.com/v1/countries api
 // Using country Code 2 letter
 
-data class Holiday(val holidayID:String, val name:String, val date:String, val type:String)
+@Serializable
+data class SavedHoliday(val name:String, val date: String, val type: String, val day: String, val country:String)
+
+data class Holiday(val holiday_id:Int, val name:String, val date:String, val type:String,val country:String)
 
 
 class DataManager(thisApp: Application): AndroidViewModel(thisApp) {

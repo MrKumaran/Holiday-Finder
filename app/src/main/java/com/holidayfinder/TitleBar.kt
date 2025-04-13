@@ -1,7 +1,6 @@
 package com.holidayfinder
 
 import android.annotation.SuppressLint
-//import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -32,7 +31,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-//import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -44,7 +42,6 @@ import com.holidayfinder.data.countryCodes
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun TitleBar(location: String, year: String, dataManager: DataManager) {
-//    val context = LocalContext.current
     // remembering variables
     var expandedCountry by remember { mutableStateOf(false) }
     var expandedYear by remember { mutableStateOf(false) }
@@ -57,11 +54,7 @@ fun TitleBar(location: String, year: String, dataManager: DataManager) {
         derivedStateOf { selectedCountryCode }.value.toString(),
         derivedStateOf { selectedYear }.value
     )
-//    val filename = "myfile.txt"
-//    val fileContents = "Hello world!"
-//    context.openFileOutput(filename, Context.MODE_PRIVATE).use {
-//        it.write(fileContents.toByteArray())
-//    }
+
     Column {
         // Title bar row
         Row(
@@ -71,7 +64,7 @@ fun TitleBar(location: String, year: String, dataManager: DataManager) {
                 )
                 .padding(
                     start = 16.dp,
-                    top = 24.dp,
+                    top = 28.dp,
                     end = 24.dp,
                     bottom = 0.dp
                 )
@@ -195,7 +188,7 @@ fun TitleBar(location: String, year: String, dataManager: DataManager) {
                                 selectedYear = years.toString()
                                 expandedYear = false
                             },
-                            contentPadding = PaddingValues(30.dp, 0.dp, 0.dp, 0.dp)
+                            contentPadding = PaddingValues(20.dp, 0.dp, 0.dp, 0.dp)
                         )
                         HorizontalDivider(
                             thickness = .2.dp,
@@ -203,7 +196,6 @@ fun TitleBar(location: String, year: String, dataManager: DataManager) {
                         )
                     }
                 }
-
                 Text(
                     text = selectedYear,
                     fontWeight = FontWeight.Medium,
