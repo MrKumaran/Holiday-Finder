@@ -140,7 +140,6 @@ fun TitleBar(location: String, year: String, dataManager: DataManager) {
                 )
 
             }
-
             // Year Row --------------------------------------------------------------------------------------------------------------------------
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(
@@ -204,7 +203,6 @@ fun TitleBar(location: String, year: String, dataManager: DataManager) {
                     color = MaterialTheme.colorScheme.primary
                 )
             }
-
         }
         HorizontalDivider(
             thickness = 1.dp,

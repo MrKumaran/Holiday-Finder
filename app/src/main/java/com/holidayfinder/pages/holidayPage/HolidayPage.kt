@@ -1,5 +1,6 @@
 package com.holidayfinder.pages.holidayPage
 
+import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -53,18 +54,18 @@ import com.holidayfinder.nonComposables.savedHoliday
 // Entire Holiday page layout
 @Composable
 fun HolidayPage(
-    dataManager: DataManager, modifier: Modifier = Modifier
+    dataManager: DataManager, savedPageToggle:Boolean, modifier: Modifier = Modifier
 ) {
     // remember filters variables
+    val context = LocalContext.current
     val selectedTypeFilters = remember { mutableStateOf("None") }
     val selectedDayFilters = remember { mutableStateOf("None") }
     val selectedMonthFilters = remember { mutableStateOf("None") }
     var holidayList = dataManager.holidayList.filter { holiday ->
-        (holiday.type == selectedTypeFilters.value || selectedTypeFilters.value == "None") && (getDay(
-            holiday.date
-        ) == selectedDayFilters.value || selectedDayFilters.value == "None") && (getMonth(holiday.date) == selectedMonthFilters.value || selectedMonthFilters.value == "None")
+        (holiday.type == selectedTypeFilters.value || selectedTypeFilters.value == "None") &&
+                (getDay(holiday.date) == selectedDayFilters.value || selectedDayFilters.value == "None") &&
+                (getMonth(holiday.date) == selectedMonthFilters.value || selectedMonthFilters.value == "None")
     }
-    println(holidayList)
     LazyColumn(
         modifier = modifier.background(
             MaterialTheme.colorScheme.background
@@ -95,26 +96,16 @@ fun HolidayPage(
                 )
             }
         }
-        // Filters ------------------------------------------------------------------------------------------
-        // Cards ---------------------------------
         items(holidayList) { holiday ->
-            val day = getDay(holiday.date)
-            val month = getMonth(holiday.date)
-            if (
-                (holiday.type == selectedTypeFilters.value || selectedTypeFilters.value == "None") &&
-                (day == selectedDayFilters.value || selectedDayFilters.value == "None") &&
-                (month == selectedMonthFilters.value || selectedMonthFilters.value == "None")
-            ) {
-                HolidayCards(
-                    eventName = holiday.name,
-                    eventType = holiday.type,
-                    eventDate = formatDate(holiday.date),
-                    eventDay = day,
-                    country = holiday.country
-                )
-            }
+            HolidayCards(
+                eventName = holiday.name,
+                eventType = holiday.type,
+                eventDate = formatDate(holiday.date),
+                eventDay = getDay(holiday.date),
+                country = holiday.country,
+                context = context
+            )
         }
-
     }
 }
 
@@ -122,9 +113,8 @@ fun HolidayPage(
 // Holiday each card layout
 @Composable
 private fun HolidayCards(
-    eventName: String, eventType: String, eventDate: String, eventDay: String, country: String
+    eventName: String, eventType: String, eventDate: String, eventDay: String, country: String, context: Context
 ) {
-    val context = LocalContext.current
     var savedHolidays = remember {
         mutableStateOf(savedHoliday(context))
     }
@@ -175,7 +165,7 @@ private fun HolidayCards(
                         if (
                             savedHolidays.value?.any { it.name == eventName } == false ||
                             savedHolidays.value?.any { it.name == eventName } == null
-                            ) {
+                        ) {
                             savedHolidays.value = saveHolidaysToFile(
                                 context = context, holidayClass = SavedHoliday(
                                     name = eventName,
@@ -212,7 +202,8 @@ private fun HolidayCards(
                                 MaterialTheme.colorScheme.tertiary
                             ), center = Offset(200f, 100f)
                         ), shape = RoundedCornerShape(20)
-                    ), thickness = .4.dp
+                    ),
+                thickness = .4.dp
             )
             Spacer(
                 modifier = Modifier.padding(vertical = 2.dp)
