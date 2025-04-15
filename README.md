@@ -24,16 +24,16 @@
 ## Output Screenshot v2 outdated will update soon
 
 ### Home page
-<img src="outputSS/appGeneralView_v2.0.png" width="400" height="900">
+<img src="outputSS/appGeneralView.png" width="400" height="900">
 
 ### Country Selection
-<img src="outputSS/countrySelection_v2.0.png" width="400" height="900">
+<img src="outputSS/countrySelection.png" width="400" height="900">
 
 ### Year Selection
-<img src="outputSS/yearSelection_v2.0.png" width="400" height="900">
+<img src="outputSS/yearSelection.png" width="400" height="900">
 
 ### Holiday Filter Selection
-<img src="outputSS/holidayFilterSelection_v2.0.png" width="400" height="900">
+<img src="outputSS/holidayFilterSelection.png" width="400" height="900">
 
 ## Have an Idea for feature or any error encounter?
 ### Open issue in issues tab, Thanks for Using
