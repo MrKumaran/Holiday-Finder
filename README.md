@@ -10,7 +10,8 @@
   - ~Themes(Dark and Light nothing Fancy)~
   - Entire UI rebranding
   - Searching option
-  - Bookmarking events
+  - ~Bookmarking events(starred events)~
+  - Adding coroutines to make it more efficient and faster
 
 ## Tech used
   - Kotlin
