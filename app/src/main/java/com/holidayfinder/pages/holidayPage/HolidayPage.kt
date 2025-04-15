@@ -43,29 +43,35 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.holidayfinder.R
 import com.holidayfinder.data.DataManager
-import com.holidayfinder.data.SavedHoliday
+import com.holidayfinder.data.Holiday
 import com.holidayfinder.filters.Filters
 import com.holidayfinder.nonComposables.formatDate
 import com.holidayfinder.nonComposables.getDay
 import com.holidayfinder.nonComposables.getMonth
-import com.holidayfinder.nonComposables.saveHolidaysToFile
-import com.holidayfinder.nonComposables.savedHoliday
+import com.holidayfinder.nonComposables.removingStaredHoliday
+import com.holidayfinder.nonComposables.addingStarHolidayToFile
+import com.holidayfinder.nonComposables.staredHoliday
 
 // Entire Holiday page layout
 @Composable
 fun HolidayPage(
-    dataManager: DataManager, savedPageToggle:Boolean, modifier: Modifier = Modifier
+    dataManager: DataManager, savedPageToggle: Boolean, modifier: Modifier = Modifier
 ) {
     // remember filters variables
     val context = LocalContext.current
     val selectedTypeFilters = remember { mutableStateOf("None") }
     val selectedDayFilters = remember { mutableStateOf("None") }
     val selectedMonthFilters = remember { mutableStateOf("None") }
-    var holidayList = dataManager.holidayList.filter { holiday ->
-        (holiday.type == selectedTypeFilters.value || selectedTypeFilters.value == "None") &&
-                (getDay(holiday.date) == selectedDayFilters.value || selectedDayFilters.value == "None") &&
-                (getMonth(holiday.date) == selectedMonthFilters.value || selectedMonthFilters.value == "None")
-    }
+    var holidayList =
+        if (!savedPageToggle) {
+            dataManager.holidayList.filter { holiday ->
+                (holiday.type == selectedTypeFilters.value || selectedTypeFilters.value == "None") &&
+                        (getDay(holiday.date) == selectedDayFilters.value || selectedDayFilters.value == "None") &&
+                        (getMonth(holiday.date) == selectedMonthFilters.value || selectedMonthFilters.value == "None")
+            }
+        } else {
+            staredHoliday(context)
+        }
     LazyColumn(
         modifier = modifier.background(
             MaterialTheme.colorScheme.background
@@ -100,8 +106,7 @@ fun HolidayPage(
             HolidayCards(
                 eventName = holiday.name,
                 eventType = holiday.type,
-                eventDate = formatDate(holiday.date),
-                eventDay = getDay(holiday.date),
+                eventDate = holiday.date,
                 country = holiday.country,
                 context = context
             )
@@ -113,10 +118,10 @@ fun HolidayPage(
 // Holiday each card layout
 @Composable
 private fun HolidayCards(
-    eventName: String, eventType: String, eventDate: String, eventDay: String, country: String, context: Context
+    eventName: String, eventType: String, eventDate: String, country: String, context: Context
 ) {
     var savedHolidays = remember {
-        mutableStateOf(savedHoliday(context))
+        mutableStateOf(staredHoliday(context))
     }
     Card(
         modifier = Modifier
@@ -147,7 +152,9 @@ private fun HolidayCards(
             modifier = Modifier.padding(vertical = 20.dp, horizontal = 20.dp)
         ) {
             // Event name ------------------------------------------------------------------------------------
-            Row {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
                     text = eventName,
                     fontFamily = FontFamily.SansSerif,
@@ -163,15 +170,28 @@ private fun HolidayCards(
                 IconButton(
                     onClick = {
                         if (
-                            savedHolidays.value?.any { it.name == eventName } == false ||
-                            savedHolidays.value?.any { it.name == eventName } == null
+                            savedHolidays.value.any { it.name == eventName
+                            } == false
                         ) {
-                            savedHolidays.value = saveHolidaysToFile(
-                                context = context, holidayClass = SavedHoliday(
+                            println(eventName)
+                            savedHolidays.value = addingStarHolidayToFile(
+                                context = context,
+                                holiday = Holiday(
+                                    holiday_id = 0,
                                     name = eventName,
                                     date = eventDate,
                                     type = eventType,
-                                    day = eventDay,
+                                    country = country
+                                )
+                            )
+                        } else {
+                            savedHolidays.value = removingStaredHoliday(
+                                context = context,
+                                holiday = Holiday(
+                                    holiday_id = 0,
+                                    name = eventName,
+                                    date = eventDate,
+                                    type = eventType,
                                     country = country
                                 )
                             )
@@ -181,7 +201,7 @@ private fun HolidayCards(
                         imageVector = Icons.Filled.Star,
                         contentDescription = "Favorite",
                         tint =
-                            if (savedHolidays.value?.any { it.name == eventName } == true)
+                            if (savedHolidays.value.any { it.name == eventName } == true)
                                 MaterialTheme.colorScheme.tertiary
                             else
                                 MaterialTheme.colorScheme.primary
@@ -238,7 +258,7 @@ private fun HolidayCards(
                         modifier = Modifier.padding(horizontal = 2.dp)
                     )
                     Text(
-                        text = eventDate,
+                        text = formatDate(eventDate),
                         fontFamily = FontFamily.SansSerif,
                         fontWeight = FontWeight.ExtraBold,
                         modifier = Modifier.padding(top = 12.dp, end = 4.dp, bottom = 12.dp),
@@ -265,7 +285,7 @@ private fun HolidayCards(
                     )
 
                     Text(
-                        text = eventDay,
+                        text = getDay(eventDate),
                         fontFamily = FontFamily.SansSerif,
                         fontWeight = FontWeight.ExtraBold,
                         modifier = Modifier.padding(top = 12.dp, end = 8.dp, bottom = 12.dp),

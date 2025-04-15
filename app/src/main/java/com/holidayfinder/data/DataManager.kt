@@ -28,10 +28,7 @@ import kotlinx.serialization.Serializable
 // Using country Code 2 letter
 
 @Serializable
-data class SavedHoliday(val name:String, val date: String, val type: String, val day: String, val country:String)
-
 data class Holiday(val holiday_id:Int, val name:String, val date:String, val type:String,val country:String)
-
 
 class DataManager(thisApp: Application): AndroidViewModel(thisApp) {
     var holidayList: List<Holiday> by mutableStateOf(listOf())

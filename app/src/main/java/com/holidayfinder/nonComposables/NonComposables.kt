@@ -2,11 +2,11 @@ package com.holidayfinder.nonComposables
 
 import android.content.Context
 import com.holidayfinder.data.Holiday
-import com.holidayfinder.data.SavedHoliday
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import kotlinx.serialization.json.encodeToStream
+import java.io.File
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
@@ -73,29 +73,43 @@ fun formatDate(dateStr:String):String{
     return date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
 }
 
-// Saving Files to internal storage
+// Saving Holiday to internal storage
 @OptIn(ExperimentalSerializationApi::class)
-fun saveHolidaysToFile(holidayClass: SavedHoliday, context: Context): List<SavedHoliday>? {
-    val filename = "SavedEvent.json"
-    val fileContent = (savedHoliday(context)?.toMutableList() ?: mutableListOf())
-    fileContent.add(holidayClass)
+fun addingStarHolidayToFile(holiday: Holiday, context: Context): List<Holiday> {
+    val filename = "SavedHoliday.json"
+    val file = File(context.filesDir, filename)
+    val holidayList = if (file.exists()) {
+        staredHoliday(context).toMutableList()
+    } else {
+        mutableListOf()
+    }
+    holidayList.add(holiday)
+    context.openFileOutput(filename, Context.MODE_PRIVATE).use { output ->
+        Json.encodeToStream(holidayList, output)
+    }
+    return holidayList
+}
+
+// Reading Holidays from internal storage
+@OptIn(ExperimentalSerializationApi::class)
+fun staredHoliday(context: Context): List<Holiday> {
+    val filename = "SavedHoliday.json"
+    val file = File(context.filesDir, filename)
+    if (!file.exists()) return emptyList()
+    val fileInputStream = context.openFileInput(filename)
+    val obj = Json.decodeFromStream<List<Holiday>>(fileInputStream)
+    fileInputStream.close()
+    return obj
+}
+
+// Removing Holiday from internal storage
+@OptIn(ExperimentalSerializationApi::class)
+fun removingStaredHoliday(context: Context, holiday: Holiday): List<Holiday> {
+    val filename = "SavedHoliday.json"
+    val fileContent = (staredHoliday(context).toMutableList())
+    fileContent.remove(holiday)
     val fileOutputStream = context.openFileOutput(filename, Context.MODE_PRIVATE)
     Json.encodeToStream(fileContent,fileOutputStream)
     fileOutputStream.close()
     return fileContent
-}
-
-// Reading Files from internal storage
-@OptIn(ExperimentalSerializationApi::class)
-fun savedHoliday(context: Context): List<SavedHoliday>? {
-    val filename = "SavedEvent.json"
-    try{
-        val fileInputStream = context.openFileInput(filename)
-        val obj = Json.decodeFromStream<List<SavedHoliday>>(fileInputStream)
-        fileInputStream.close()
-        return obj
-    }
-    catch (e: Exception){
-        return null
-    }
 }
