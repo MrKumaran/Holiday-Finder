@@ -49,7 +49,7 @@ import com.holidayfinder.nonComposables.formatDate
 import com.holidayfinder.nonComposables.getDay
 import com.holidayfinder.nonComposables.getMonth
 import com.holidayfinder.nonComposables.removingStaredHoliday
-import com.holidayfinder.nonComposables.addingStarHolidayToFile
+import com.holidayfinder.nonComposables.saveHolidaysToFile
 import com.holidayfinder.nonComposables.staredHoliday
 
 // Entire Holiday page layout
@@ -174,7 +174,7 @@ private fun HolidayCards(
                             } == false
                         ) {
                             println(eventName)
-                            savedHolidays.value = addingStarHolidayToFile(
+                            savedHolidays.value = saveHolidaysToFile(
                                 context = context,
                                 holiday = Holiday(
                                     holiday_id = 0,

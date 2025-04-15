@@ -75,7 +75,7 @@ fun formatDate(dateStr:String):String{
 
 // Saving Holiday to internal storage
 @OptIn(ExperimentalSerializationApi::class)
-fun addingStarHolidayToFile(holiday: Holiday, context: Context): List<Holiday> {
+fun saveHolidaysToFile(holiday: Holiday, context: Context): List<Holiday> {
     val filename = "SavedHoliday.json"
     val file = File(context.filesDir, filename)
     val holidayList = if (file.exists()) {
