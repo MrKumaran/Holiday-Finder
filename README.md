@@ -10,7 +10,6 @@
   - ~Themes(Dark and Light nothing Fancy)~
   - Searching option
   - ~Bookmarking events(starred events)~
-  - Adding coroutines to make it more efficient and faster
 
 ## Tech used
   - Kotlin
