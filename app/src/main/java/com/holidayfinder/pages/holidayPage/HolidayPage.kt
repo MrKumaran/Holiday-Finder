@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
@@ -26,6 +27,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -51,6 +54,7 @@ import com.holidayfinder.nonComposables.getMonth
 import com.holidayfinder.nonComposables.removingStaredHoliday
 import com.holidayfinder.nonComposables.saveHolidaysToFile
 import com.holidayfinder.nonComposables.staredHoliday
+import java.time.LocalDate
 
 // Entire Holiday page layout
 @Composable
@@ -72,10 +76,21 @@ fun HolidayPage(
         } else {
             staredHoliday(context)
         }
+
+    // TODO Not working as intened
+    var today = LocalDate.now().toString()
+    var scrollRememberState = rememberLazyListState(0)
+    val startIndex = remember {
+        holidayList.indexOfFirst { it.date >= today }.coerceAtLeast(0)
+    }
+    LaunchedEffect(startIndex) {
+        scrollRememberState.animateScrollToItem(derivedStateOf {startIndex}.value)
+    }
+    println(startIndex)
     LazyColumn(
         modifier = modifier.background(
             MaterialTheme.colorScheme.background
-        ), horizontalAlignment = Alignment.CenterHorizontally
+        ), state = scrollRememberState, horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
             Filters.HolidayTypeFilter(
@@ -123,13 +138,14 @@ private fun HolidayCards(
     var savedHolidays = remember {
         mutableStateOf(staredHoliday(context))
     }
+    var today = LocalDate.now().toString()
     Card(
         modifier = Modifier
             .padding(
                 horizontal = 12.dp, vertical = 8.dp
             )
             .width(400.dp),
-        colors = cardColors(MaterialTheme.colorScheme.background),
+        colors = cardColors(if (eventDate == today) Color.Green else MaterialTheme.colorScheme.background),
         shape = RoundedCornerShape(20),
         elevation = cardElevation(
             defaultElevation = 0.dp
@@ -173,7 +189,6 @@ private fun HolidayCards(
                             savedHolidays.value.any { it.name == eventName
                             } == false
                         ) {
-                            println(eventName)
                             savedHolidays.value = saveHolidaysToFile(
                                 context = context,
                                 holiday = Holiday(

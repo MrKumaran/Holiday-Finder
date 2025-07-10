@@ -1,6 +1,7 @@
 package com.holidayfinder.data
 
 import android.app.Application
+import android.util.Log.e
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -36,9 +37,17 @@ class DataManager(thisApp: Application): AndroidViewModel(thisApp) {
         fetchData("IN","2025")
     }
      fun fetchData(countryCode:String, year:String){
-        viewModelScope.launch {
-            holidayList = API.holidayService.fetchHoliday(countryCode, year)
-        }
+
+         viewModelScope.launch {
+             try {
+                 holidayList = API.holidayService.fetchHoliday(countryCode, year)
+             }
+             catch (e: Exception) {
+                 holidayList = listOf()
+                 e.printStackTrace()
+             }
+         }
+
     }
 }
 
