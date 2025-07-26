@@ -24,7 +24,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.holidayfinder.data.DataManager
-import com.holidayfinder.pages.holidayPage.HolidayPage
 
 // app layout
 @Composable
@@ -67,7 +66,7 @@ fun AppStructure(dataManager: DataManager) {
             }
         }
         ) { innerPadding ->
-            HolidayPage(
+            HomePage(
                 dataManager = dataManager,
                 savedPageToggle = savedPageToggle,
                 modifier = Modifier
