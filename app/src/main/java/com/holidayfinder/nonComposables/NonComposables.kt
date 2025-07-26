@@ -20,11 +20,7 @@ import kotlin.collections.toMutableList
 fun holidayTypeMap(holidayList:List<Holiday>): HashMap<String,Int> {
     val holidayType: HashMap<String,Int> = mutableMapOf<String,Int>() as HashMap<String,Int>
     for (holiday in holidayList) {
-        if (holidayType.containsKey(holiday.type)) {
-            holidayType[holiday.type] = holidayType[holiday.type]!! + 1
-        } else {
-            holidayType[holiday.type] = 1
-        }
+        holidayType[holiday.type] = holidayType.getOrDefault(holiday.type, 0) + 1
     }
     return holidayType
 }
@@ -33,11 +29,7 @@ fun holidayTypeMap(holidayList:List<Holiday>): HashMap<String,Int> {
 fun holidayDaysMap(holidayList:List<Holiday>): HashMap<String,Int> {
     val holidayDay: HashMap<String,Int> = mutableMapOf<String,Int>() as HashMap<String,Int>
     for (holiday in holidayList) {
-        if (holidayDay.containsKey(getDay(holiday.date))) {
-            holidayDay[getDay(holiday.date)] = holidayDay[getDay(holiday.date)]!! + 1
-        } else {
-            holidayDay[getDay(holiday.date)] = 1
-        }
+        holidayDay[getDay(holiday.date)] = holidayDay.getOrDefault(getDay(holiday.date), 0) + 1
     }
     return holidayDay
 }
@@ -46,11 +38,7 @@ fun holidayDaysMap(holidayList:List<Holiday>): HashMap<String,Int> {
 fun holidayMonthsMap(holidayList:List<Holiday>): HashMap<String,Int> {
     val holidayMonths: HashMap<String,Int> = mutableMapOf<String,Int>() as HashMap<String,Int>
     for (holiday in holidayList) {
-        if (holidayMonths.containsKey(getMonth(holiday.date))) {
-            holidayMonths[getMonth(holiday.date)] = holidayMonths[getMonth(holiday.date)]!! + 1
-        } else {
-            holidayMonths[getMonth(holiday.date)] = 1
-        }
+        holidayMonths[getMonth(holiday.date)] = holidayMonths.getOrDefault(getMonth(holiday.date), 0) + 1
     }
     return holidayMonths
 }
