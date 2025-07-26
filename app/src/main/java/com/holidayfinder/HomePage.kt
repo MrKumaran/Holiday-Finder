@@ -1,4 +1,4 @@
-package com.holidayfinder.pages.holidayPage
+package com.holidayfinder
 
 import android.content.Context
 import androidx.compose.foundation.BorderStroke
@@ -28,9 +28,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -44,7 +44,6 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.holidayfinder.R
 import com.holidayfinder.data.DataManager
 import com.holidayfinder.data.Holiday
 import com.holidayfinder.filters.Filters
@@ -54,11 +53,14 @@ import com.holidayfinder.nonComposables.getMonth
 import com.holidayfinder.nonComposables.removingStaredHoliday
 import com.holidayfinder.nonComposables.saveHolidaysToFile
 import com.holidayfinder.nonComposables.staredHoliday
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 // Entire Holiday page layout
 @Composable
-fun HolidayPage(
+fun HomePage(
     dataManager: DataManager, savedPageToggle: Boolean, modifier: Modifier = Modifier
 ) {
     // remember filters variables
@@ -66,7 +68,7 @@ fun HolidayPage(
     val selectedTypeFilters = remember { mutableStateOf("None") }
     val selectedDayFilters = remember { mutableStateOf("None") }
     val selectedMonthFilters = remember { mutableStateOf("None") }
-    var holidayList =
+    val holidayList =
         if (!savedPageToggle) {
             dataManager.holidayList.filter { holiday ->
                 (holiday.type == selectedTypeFilters.value || selectedTypeFilters.value == "None") &&
@@ -77,20 +79,26 @@ fun HolidayPage(
             staredHoliday(context)
         }
 
-    // TODO Not working as intened
-    var today = LocalDate.now().toString()
-    var scrollRememberState = rememberLazyListState(0)
-    val startIndex = remember {
-        holidayList.indexOfFirst { it.date >= today }.coerceAtLeast(0)
+    val today = LocalDate.now()
+    val scrollRememberState = rememberLazyListState(0)
+    var todayOrNextEventDate: Int = -1
+    LaunchedEffect(holidayList) {
+        val startIndex = holidayList.indexOfFirst {
+            LocalDate.parse(it.date, DateTimeFormatter.ofPattern("yyyy-MM-dd")) >= today
+        }
+        todayOrNextEventDate = startIndex
+        snapshotFlow { scrollRememberState.layoutInfo.totalItemsCount }
+            .filter { it > 0 }
+            .first()
+        scrollRememberState.scrollToItem(if (startIndex == -1) 0 else startIndex)
     }
-    LaunchedEffect(startIndex) {
-        scrollRememberState.animateScrollToItem(derivedStateOf {startIndex}.value)
-    }
-    println(startIndex)
+
     LazyColumn(
         modifier = modifier.background(
             MaterialTheme.colorScheme.background
-        ), state = scrollRememberState, horizontalAlignment = Alignment.CenterHorizontally
+        ),
+        state = scrollRememberState,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
             Filters.HolidayTypeFilter(
@@ -100,11 +108,15 @@ fun HolidayPage(
                     selectedTypeFilters.value = it
                 })
             Filters.HolidayDayFilter(
-                holidayList = holidayList, selectedDay = selectedDayFilters.value, onChange = {
+                holidayList = holidayList,
+                selectedDay = selectedDayFilters.value,
+                onChange = {
                     selectedDayFilters.value = it
                 })
             Filters.HolidayMonthFilter(
-                holidayList = holidayList, selectedMonth = selectedMonthFilters.value, onChange = {
+                holidayList = holidayList,
+                selectedMonth = selectedMonthFilters.value,
+                onChange = {
                     selectedMonthFilters.value = it
                 })
             if (holidayList.isEmpty()) {
@@ -123,7 +135,8 @@ fun HolidayPage(
                 eventType = holiday.type,
                 eventDate = holiday.date,
                 country = holiday.country,
-                context = context
+                context = context,
+                todayOrNextEventDate = if(todayOrNextEventDate != -1) holidayList[todayOrNextEventDate].date else "NONE"
             )
         }
     }
@@ -133,19 +146,18 @@ fun HolidayPage(
 // Holiday each card layout
 @Composable
 private fun HolidayCards(
-    eventName: String, eventType: String, eventDate: String, country: String, context: Context
+    eventName: String, eventType: String, eventDate: String, country: String, todayOrNextEventDate: String, context: Context
 ) {
     var savedHolidays = remember {
         mutableStateOf(staredHoliday(context))
     }
-    var today = LocalDate.now().toString()
     Card(
         modifier = Modifier
             .padding(
                 horizontal = 12.dp, vertical = 8.dp
             )
             .width(400.dp),
-        colors = cardColors(if (eventDate == today) Color.Green else MaterialTheme.colorScheme.background),
+        colors = cardColors(if (eventDate == todayOrNextEventDate) Color.Cyan else MaterialTheme.colorScheme.background),
         shape = RoundedCornerShape(20),
         elevation = cardElevation(
             defaultElevation = 0.dp
@@ -178,7 +190,6 @@ private fun HolidayCards(
                     color = MaterialTheme.colorScheme.primary,
                     fontSize = 16.sp,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-
                 )
                 Spacer(
                     modifier = Modifier.weight(1f)
